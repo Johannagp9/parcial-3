@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}
+    Mensajes recibidos
+{% endblock %}
+{% block content %}
+    <br>
+    <a href="{% url 'crear_mensaje' %}" type="button">Crear mensaje</a>
+    <br>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Contenido</th>
+            <th>Fecha</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for mensaje in mensajes %}
+            <tr>
+                <td>{{ mensaje.origen }}</td>
+                <td>{{ mensaje.destino }}</td>
+                <td>{{ mensaje.contenido }}</td>
+                <td>{{ mensaje.fecha }}</td>
+                <td> <a href="{% url 'responder' mensaje.origen %}" type="button">Responder</a></td>
+            </tr>
+        {% empty %}
+            <label>No hay mensajes para ti</label>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

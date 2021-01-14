@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}
+        Incio de sesión
+{% endblock %}
+{% block  stylesheet %}
+    {{ block.super }}
+{% endblock %}
+{% block body %}
+    <div class="contenedor" align="center">
+        <form id="myForm" action="{% url 'autenticar' %}"
+              method="post" enctype="multipart/form-data"> {% csrf_token %}
+        <input id="token" type="hidden" name="token">
+            </form>
+        <div class="g-signin2" data-onsuccess="onSignIn" style="padding-top: 30px"></div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ block.super }}
+    <script>
+        function onSignIn(googleUser) {
+            console.log("entro")
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId() + 'Don’t send to your backend! Use an ID token.');
+            var id_token = googleUser.getAuthResponse().id_token;
+            console.log('ID token: ' + id_token);
+            console.log('NAME: ' + profile.getName() + 'Don’t send to your backend! Use an ID token.');
+            document.getElementById("token").value= id_token;
+            document.getElementById("myForm").submit();
+        }
+    </script>
+{% endblock %}

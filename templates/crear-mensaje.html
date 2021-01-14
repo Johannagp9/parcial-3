@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+    Crear mensaje
+{% endblock %}
+{% block content %}
+    <br>
+    <form method="post" action="{% url 'guardar_mensaje' %}">{% csrf_token %}
+        <input type="email" name="destino">
+        <br>
+        <textarea name="contenido"></textarea>
+        <br>
+        <button type="submit">Enviar</button>
+    </form>
+{% endblock %}

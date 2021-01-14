@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+    Responder
+{% endblock %}
+{% block content %}
+      <br>
+    <form method="post" action="{% url 'enviar_respuesta' %}">{% csrf_token %}
+        <label>Respuesta:</label>
+        <br>
+        <textarea name="contenido"></textarea>
+          <br>
+        <input type="hidden" name="destino" value="{{ origen }}"/>
+        <button type="submit">Responder</button>
+    </form>
+{% endblock %}
