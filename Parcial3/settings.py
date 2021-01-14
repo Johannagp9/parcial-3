@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'client',
     'server',
+    'gunicorn'
 ]
 
 MIDDLEWARE = [
@@ -147,5 +148,7 @@ cloudinary.config(
   api_secret = API_SECRET,
   secure = True
 )
+
+
 
 django_on_heroku.settings(locals())
