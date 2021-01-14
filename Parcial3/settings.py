@@ -85,14 +85,22 @@ WSGI_APPLICATION = 'Parcial3.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
+
+MONGODB_DATABASES = {
     'default': {
-        'ENGINE': '',
-        'NAME': '',
+        'name': 'parcial3',
+        "host": BD_NAME,
+        "password": "ingenieriaWeb",
+        "username": "admin",
     }
 }
 
 
+DATABASES = {
+}
+
+SESSION_ENGINE = 'django_mongoengine.sessions'
+SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -126,7 +134,7 @@ USE_L10N = True
 USE_TZ = True
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-mongoengine.connect(host=BD_NAME)
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/

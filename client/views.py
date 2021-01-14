@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -23,11 +24,16 @@ def cerrar_sesion(request):
 def iniciar_sesion(request):
     return render(request, INICIAR_SESION_TEMPLATE)
 
+def comprobar_response(request, response):
+    if isinstance(response, HttpResponse):
+        if response.status_code == 401:
+            return render(request, INICIAR_SESION_TEMPLATE)
 
 @csrf_exempt
 def autenticar_usuario(request):
     id_token = request.POST.get('token')
     idinfo = authenticate_user(id_token)
+    comprobar_response(request, idinfo)
     if idinfo is not None:
         request.session['token'] = idinfo
         return redirect('/cargar-principal')
@@ -36,8 +42,9 @@ def autenticar_usuario(request):
 
 
 def cargar_principal(request):
-    usuario = request.session['token']
-    if usuario is None:
+    try:
+        usuario = request.session.get('usuario', None)
+    except:
         return render(request, INICIAR_SESION_TEMPLATE)
     mensajes = get_mensajes_por_destino({'destino': usuario['email']}, usuario['sub'])
 
@@ -48,8 +55,9 @@ def cargar_principal(request):
 
 
 def enviar_respuesta(request):
-    usuario = request.session['token']
-    if usuario is None:
+    try:
+        usuario = request.session.get('usuario', None)
+    except:
         return render(request, INICIAR_SESION_TEMPLATE)
     destino = request.POST.get('destino')
     contenido = request.POST.get('contenido')
@@ -61,8 +69,9 @@ def enviar_respuesta(request):
     return redirect('/cargar-principal')
 
 def guardar_mensaje(request):
-    usuario = request.session['token']
-    if usuario is None:
+    try:
+        usuario = request.session.get('usuario', None)
+    except:
         return render(request, INICIAR_SESION_TEMPLATE)
     destino = request.POST.get('destino')
     contenido = request.POST.get('contenido')
@@ -74,14 +83,16 @@ def guardar_mensaje(request):
     return redirect('/cargar-principal')
 
 def crear_mensaje(request):
-    usuario = request.session['token']
-    if usuario is None:
+    try:
+        usuario = request.session.get('usuario', None)
+    except:
         return render(request, INICIAR_SESION_TEMPLATE)
     return render(request,CREAR_MENSAJE)
 
 
 def responder(request, origen ):
-    usuario = request.session['token']
-    if usuario is None:
+    try:
+        usuario = request.session.get('usuario', None)
+    except:
         return render(request, INICIAR_SESION_TEMPLATE)
     return render(request,RESPONDER, {'origen': origen})
