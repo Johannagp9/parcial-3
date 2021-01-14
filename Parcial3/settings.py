@@ -14,6 +14,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import cloudinary as cloudinary
+import django_heroku
 import mongoengine as mongoengine
 import django_on_heroku
 
@@ -151,4 +152,4 @@ cloudinary.config(
 
 
 
-django_on_heroku.settings(locals())
+django_heroku.settings(locals())
