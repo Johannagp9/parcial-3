@@ -43,9 +43,10 @@ def autenticar_usuario(request):
 
 def cargar_principal(request):
     try:
-        usuario = request.session.get('usuario', None)
+        usuario = request.session.get('token', None)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
+
     mensajes = get_mensajes_por_destino({'destino': usuario['email']}, usuario['sub'])
 
     if mensajes is None:
@@ -56,7 +57,7 @@ def cargar_principal(request):
 
 def enviar_respuesta(request):
     try:
-        usuario = request.session.get('usuario', None)
+        usuario = request.session.get('token', None)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     destino = request.POST.get('destino')
@@ -70,7 +71,7 @@ def enviar_respuesta(request):
 
 def guardar_mensaje(request):
     try:
-        usuario = request.session.get('usuario', None)
+        usuario = request.session.get('token', None)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     destino = request.POST.get('destino')
@@ -84,7 +85,7 @@ def guardar_mensaje(request):
 
 def crear_mensaje(request):
     try:
-        usuario = request.session.get('usuario', None)
+        usuario = request.session.get('token', None)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     return render(request,CREAR_MENSAJE)
@@ -92,7 +93,7 @@ def crear_mensaje(request):
 
 def responder(request, origen ):
     try:
-        usuario = request.session.get('usuario', None)
+        usuario = request.session.get('token', None)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     return render(request,RESPONDER, {'origen': origen})
