@@ -150,6 +150,10 @@ cloudinary.config(
   secure = True
 )
 
+STATIC_ROOT = 'static'
+STATICFILES_DIRS = (
+    django_heroku.os.path.join(BASE_DIR, 'static'),
+)
 
 
 django_heroku.settings(locals())
