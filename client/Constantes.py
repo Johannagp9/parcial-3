@@ -1,1 +1,1 @@
-APP_NAME="http://127.0.0.1:8000/"
+APP_NAME="http://johanna-parcial-3.herokuapp.com/"
