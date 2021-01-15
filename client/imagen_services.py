@@ -19,3 +19,10 @@ def update_imagen(id,params,token):
     response = generate_put(url,params,token)
     if response:
         return response
+
+def get_imagen(id, token):
+    url = APP_NAME + "/api/imagenes/" + id + "/"
+    params = {}
+    response = generate_get(url, token=token, params=params)
+    if response:
+        return response_2_dict(response)

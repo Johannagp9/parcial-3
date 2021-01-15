@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 
+from client.imagen_services import get_imagen, update_imagen
 from client.mensajes_services import get_mensajes_por_destino, create_mensaje
 from client.services import authenticate_user, get_cloudinary_url, paginate
 from client.usuario_services import getUsuarioByToken, create_usuario
@@ -152,7 +153,7 @@ def get_imagenes(request):
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
 
-    imagenes = get_imagenes({}, usuario['sub'])
+    imagenes = get_imagenes({}, usuario['google_id'])
     if imagenes is not None:
         imagenes = paginate(request, imagenes, 9)
 
@@ -173,6 +174,11 @@ def update_description(request,id):
             return render(request, INICIAR_SESION_TEMPLATE)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
+    response = update_imagen(id,
+                               {"usuario": usuario['id'],
+                                "descripcion": request.POST.get("descripcion")}, usuario['google_id'])
+    comprobar_response(request, response)
+
 
 @csrf_exempt
 def ajax_filter_imagenes(request):
@@ -183,7 +189,7 @@ def ajax_filter_imagenes(request):
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     descripcion = request.POST.get('descripcion')
-    imagenes = get_imagenes({'descripcion':descripcion}, usuario['sub'])
+    imagenes = get_imagenes({'descripcion':descripcion}, usuario['google_id'])
     comprobar_response(request,imagenes)
     if imagenes is not None:
         imagenes = paginate(request, imagenes, 9)
@@ -209,6 +215,18 @@ def guardar_imagen(request):
     else:
         messages.error(request, "No se ha podido crear su imagen")
     return render(request, SUBIR_IMAGEN_TEMPLATE, {'usuario':usuario})
+
+def editar_descripcion(request,id):
+    try:
+        usuario = request.session['usuario']
+        if usuario is None:
+            return render(request, INICIAR_SESION_TEMPLATE)
+    except:
+        return render(request, INICIAR_SESION_TEMPLATE)
+
+    imagen=get_imagen(id,usuario['google_id'])
+    comprobar_response(request, imagen)
+    return render(request, SUBIR_IMAGEN_TEMPLATE, {'usuario': usuario, 'imagen': imagen })
 
 
 
