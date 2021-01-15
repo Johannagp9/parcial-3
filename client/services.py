@@ -1,7 +1,7 @@
 
 import json
 
-
+import cloudinary.uploader
 import requests
 from django.http import HttpResponse
 
@@ -64,3 +64,11 @@ def authenticate_user(id_token):
         return response_2_dict(response.json())
     return None
 
+def get_cloudinary_url(request):
+    if len(request.FILES) > 0:
+        file = request.FILES['foto']
+        result = cloudinary.uploader.upload(file, transformation=[
+            {'width': 500, 'crop': 'scale', }])
+        foto_url = result["url"]
+        return foto_url
+    return None

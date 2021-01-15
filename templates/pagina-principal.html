@@ -3,32 +3,60 @@
     Mensajes recibidos
 {% endblock %}
 {% block content %}
-    <br>
-    <a href="{% url 'crear_mensaje' %}" type="button">Crear mensaje</a>
-    <br>
+    <div class="modal fade" id="modal_password">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Contraseña</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
 
-    <table>
-        <thead>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <h2 class="text-center" style="color: #447e9b">Mensajes recibidos</h2>
+    <div class="container">
+    <table class="table table-hover">
+        <thead class="text-center">
         <tr>
             <th>Origen</th>
             <th>Destino</th>
             <th>Contenido</th>
             <th>Fecha</th>
             <th></th>
+            <th>Imagen</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="text-left">
         {% for mensaje in mensajes %}
             <tr>
                 <td>{{ mensaje.origen }}</td>
                 <td>{{ mensaje.destino }}</td>
                 <td>{{ mensaje.contenido }}</td>
                 <td>{{ mensaje.fecha }}</td>
-                <td> <a href="{% url 'responder' mensaje.origen %}" type="button">Responder</a></td>
+                <td> <a href="{% url 'responder' mensaje.origen %}" class="btn btn-light">Responder</a></td>
+                <td> {% if mensaje.foto %} <button onclick="cargarImagen({{ mensaje.foto }})" class="btn btn-dark">Imagen</button> {% else %} Sin imagen adjunta {% endif %}</td>
             </tr>
         {% empty %}
-            <label>No hay mensajes para ti</label>
+            <div class="alert alert-info">No hay mensajes para ti</div>
         {% endfor %}
         </tbody>
     </table>
+      <br>
+    <p>
+        <a href="{% url 'crear_mensaje' %}" class="btn btn-success btn-block">Crear mensaje</a>
+    </p>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ block.super }}
+    <script>
+        function cargarImagen(img) {
+            $("#modal_password .modal-body").html("<img id=\"img\" src=\""+img+"\" style=\"max-height: 1000px; max-width: 950px\"/>");
+        }
+    </script>
 {% endblock %}

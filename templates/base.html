@@ -21,7 +21,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Graffigram</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Mensajería</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -39,9 +39,11 @@
             </div>
         </div>
     </div>
-    <a href="#" data-toggle="modal" data-target="#cerrarSesionModalCenter" type="button">Cerrar sesión<i class="fas fa-power-off" style="color:whitesmoke;"></i></a>
     {% block content %}
-        {% endblock %}
+    {% endblock %}
+    <div class="container">
+    <a href="#" class="btn btn-info btn-block" data-toggle="modal" data-target="#cerrarSesionModalCenter">Cerrar sesión</a>
+    </div>
 {% endblock %}
 {% block javascripts %}
     <script src="https://code.jquery.com/jquery-3.3.1.js"

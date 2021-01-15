@@ -3,7 +3,6 @@ import json
 from google.auth.transport import requests
 from django.core.cache import cache
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from google.oauth2 import id_token
 from rest_framework_mongoengine import generics
@@ -96,3 +95,4 @@ class MensajeDetail(generics.RetrieveUpdateDestroyAPIView):
         if result is None:
             return HttpResponse('Unauthorized', status=401)
         return self.destroy(request, *args, **kwargs)
+
