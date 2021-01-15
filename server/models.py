@@ -3,7 +3,7 @@ from datetime import datetime
 from django.db import models
 
 # Create your models here.
-from mongoengine import Document, StringField, DateTimeField, EmailField
+from mongoengine import Document, StringField, DateTimeField, EmailField, ReferenceField, IntField
 
 
 class Mensaje(Document):
@@ -16,5 +16,17 @@ class Mensaje(Document):
     def __str__(self):
         return self.contenido
 
+class Usuario(Document):
+    google_id = StringField()
+    email = EmailField()
+    def __str__(self):
+        return self.email
+
+
+class Imagen(Document):
+    usuario = ReferenceField(Usuario)
+    descripcion = StringField(null=False)
+    foto = StringField(null=True)
+    likes = IntField(default=0)
 
 

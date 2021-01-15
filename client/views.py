@@ -7,12 +7,17 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from client.mensajes_services import get_mensajes_por_destino, create_mensaje
-from client.services import authenticate_user, get_cloudinary_url
+from client.services import authenticate_user, get_cloudinary_url, paginate
+from client.usuario_services import getUsuarioByToken, create_usuario
 
 INICIAR_SESION_TEMPLATE = "iniciar-sesion.html"
-PAGINA_PRINCIPAL_TEMPLATE = "pagina-principal.html"
+PAGINA_PRINCIPAL_TEMPLATE = "pagina-panel-imagenes.html"
 CREAR_MENSAJE = "crear-mensaje.html"
 RESPONDER = "responder.html"
+PRINCIPAL_TEMPLATE="principal.html"
+SUBIR_IMAGEN_TEMPLATE="subir-imagen.html"
+PANEL_IMAGENES_TEMPLATE="panel-imagenes.html"
+
 
 
 @csrf_exempt
@@ -36,14 +41,22 @@ def comprobar_session(usuario, request):
         return render(request, INICIAR_SESION_TEMPLATE)
 
 
+
+
 @csrf_exempt
 def autenticar_usuario(request):
     id_token = request.POST.get('token')
     idinfo = authenticate_user(id_token)
-    comprobar_response(request, idinfo)
     if idinfo is not None:
-        request.session['usuario'] = idinfo
-        user = request.session['usuario']
+        usuario = getUsuarioByToken(idinfo['sub'])
+        comprobar_response(request, idinfo)
+        if usuario is None:
+            request.session['usuario'] = idinfo
+            usuario = {"google_id": idinfo['sub'], "email": idinfo['email']}
+            response = create_usuario(usuario, idinfo['sub'])
+            if not response:
+                return render(request, PRINCIPAL_TEMPLATE)
+        request.session['usuario'] = usuario[0]
         return redirect('/cargar-principal')
     else:
         return render(request, INICIAR_SESION_TEMPLATE)
@@ -120,6 +133,84 @@ def responder(request, origen):
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     return render(request, RESPONDER, {'origen': origen})
+
+def subir_imagen(request):
+    try:
+        usuario = request.session['usuario']
+        if usuario is None:
+            return render(request, INICIAR_SESION_TEMPLATE)
+    except:
+        return render(request, INICIAR_SESION_TEMPLATE)
+    return render(request, SUBIR_IMAGEN_TEMPLATE, {'usuario': usuario})
+
+
+def get_imagenes(request):
+    try:
+        usuario = request.session['usuario']
+        if usuario is None:
+            return render(request, INICIAR_SESION_TEMPLATE)
+    except:
+        return render(request, INICIAR_SESION_TEMPLATE)
+
+    imagenes = get_imagenes({}, usuario['sub'])
+    if imagenes is not None:
+        imagenes = paginate(request, imagenes, 9)
+
+    return render(request, PAGINA_PRINCIPAL_TEMPLATE, {'imagenes': imagenes, 'usuario':usuario})
+
+def dar_like(request,id):
+    try:
+        usuario = request.session['usuario']
+        if usuario is None:
+            return render(request, INICIAR_SESION_TEMPLATE)
+    except:
+        return render(request, INICIAR_SESION_TEMPLATE)
+
+def update_description(request,id):
+    try:
+        usuario = request.session['usuario']
+        if usuario is None:
+            return render(request, INICIAR_SESION_TEMPLATE)
+    except:
+        return render(request, INICIAR_SESION_TEMPLATE)
+
+@csrf_exempt
+def ajax_filter_imagenes(request):
+    try:
+        usuario = request.session['usuario']
+        if usuario is None:
+            return render(request, INICIAR_SESION_TEMPLATE)
+    except:
+        return render(request, INICIAR_SESION_TEMPLATE)
+    descripcion = request.POST.get('descripcion')
+    imagenes = get_imagenes({'descripcion':descripcion}, usuario['sub'])
+    comprobar_response(request,imagenes)
+    if imagenes is not None:
+        imagenes = paginate(request, imagenes, 9)
+    return render(request, PAGINA_PRINCIPAL_TEMPLATE, {'imagenes': imagenes, 'usuario': usuario})
+
+
+
+def guardar_imagen(request):
+    try:
+        usuario = request.session['usuario']
+        if usuario is None:
+            return render(request, INICIAR_SESION_TEMPLATE)
+    except:
+        return render(request, INICIAR_SESION_TEMPLATE)
+    descripcion = request.POST.get('descripcion')
+    params = {'descripcion': descripcion, 'usuario': usuario['id']}
+    foto = get_cloudinary_url(request)
+    if foto is not None:
+        params['foto'] = foto
+    response = create_mensaje(params, usuario['sub'])
+    if response:
+        messages.success(request, "Se ha creado su imagen")
+    else:
+        messages.error(request, "No se ha podido crear su imagen")
+    return render(request, SUBIR_IMAGEN_TEMPLATE, {'usuario':usuario})
+
+
 
 
 

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container" style="background: rgba(255,255,255,0.5) ;">
+        <!---MENSAJES-->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success
+        {% elif  message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}secondary{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <!---->
+        <div class="container" style="background: rgba(255,255,255,0.8);">
+            <div class="form-group">
+                <label for="filter">Buscar imagen por #hastagh o palabras de su descripción:</label>
+                <div class="col-sm-10">
+                    <input id="descripcion" class="form-control">
+                </div>
+            </div>
+        <br>
+        <br>
+        <div id="panelImagenes">
+                    {% include "panel-imagenes.html"  with imagenes=imagenes %}
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+
+            $('#descripcion').keyup(function () {
+                search();
+            })
+        });
+
+        function search() {
+
+            var descripcion = $("#descripcion").val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'ajax_filtrar_imagen' %}',
+                data: {
+                    descripcion: descripcion,
+                },
+                beforeSend: function () {
+                    $("#panelImagenes").html("Cargando imagenes...");
+                },
+                success: function (data) {
+                    $("#panelImagenes").html(data);
+                },
+                error: function (data) {
+                    console.log(data)
+                }
+            })
+        }
+    </script>
+{% endblock %}

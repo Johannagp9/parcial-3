@@ -9,9 +9,9 @@ from rest_framework_mongoengine import generics
 
 from Parcial3.settings import GOOGLE_CLIENT_ID
 
-from server.filters import MensajeFilter
-from server.models import Mensaje
-from server.serializers import MensajeSerializer
+from server.filters import MensajeFilter, UsuarioFilter, ImagenFilter
+from server.models import Mensaje, Imagen, Usuario
+from server.serializers import MensajeSerializer, ImagenSerializer, UsuarioSerializer
 
 
 @csrf_exempt
@@ -96,3 +96,103 @@ class MensajeDetail(generics.RetrieveUpdateDestroyAPIView):
             return HttpResponse('Unauthorized', status=401)
         return self.destroy(request, *args, **kwargs)
 
+class ImagenList(generics.ListCreateAPIView):
+    queryset = Imagen.objects.order_by('-likes')
+    serializer_class = ImagenSerializer
+
+    def get(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        print("TOKEN SERVER "+token)
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.create(request, *args, **kwargs)
+
+    def filter_queryset(self, queryset):
+        usuario = self.request.query_params.get('usuario', None)
+        if usuario is not None:
+            queryset = queryset.filter(usuario=usuario)
+        filter = ImagenFilter(self.request.query_params, queryset=queryset)
+        return filter.qs
+
+
+class ImagenDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Imagen.objects.all()
+    serializer_class = ImagenSerializer
+
+    def get(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.destroy(request, *args, **kwargs)
+
+class UsuarioList(generics.ListCreateAPIView):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+
+    def get(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        print("TOKEN SERVER "+token)
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.create(request, *args, **kwargs)
+
+    def filter_queryset(self, queryset):
+        filter = UsuarioFilter(self.request.query_params, queryset=queryset)
+        return filter.qs
+
+
+class UsuarioDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+
+    def get(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        token = request.headers['Authorization']
+        result = cache.get(token)
+        if result is None:
+            return HttpResponse('Unauthorized', status=401)
+        return self.destroy(request, *args, **kwargs)

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block body %}
+    <br><br>
+    <div class="container">
+        <div class="row d-flex d-sm-flex justify-content-rigth justify-content-sm-rigth">
+            {% for imagen in imagenes %}
+                <!-- MODAL ELIMINAR-->
+                <div class="modal fade" id="eliminarModalCenter{{ imagen.id }}" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">{{ imagen.id }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Estás seguro de que deseas eliminarlo?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+                                <button id="btn_anadir" type="button" class="btn btn-outline"
+                                        onclick="window.location.href='{% url 'eliminar_imagen' imagen.id %}'">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!------------------->
+                <div class="col-md-3" style="max-width: 75%;min-width: 33.3333%;">
+                    <div class="card cards-shadown cards-hover" data-aos="slide-right" data-aos-duration="950">
+                            <img class="card-img-top" name="botonGraffiti" src="{{ imagen.foto }}"
+                                 alt="Card image cap">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <p>Descripción: {{ imagen.descripcion }}</p>
+                            </div>
+                             <div class="form-group">
+                                <p>Numero de likes: {{ imagen.likes }}</p>
+                            </div>
+                            <div class="text-right">
+                                <a href="{% url 'nuevo_like'  imagen.id %}" class="btn" id="compartirButton"
+                                ><i data-toggle="tooltip" data-placement="top" title="Dar like" class
+                                        ="fa fa-heart" style="color: lightcoral"> </i>
+                                </a>
+                                {% if usuario.id == graffiti.usuario.id %}
+                                    <!--SI EL USUARIO ES EL MISMO AL DE LA SESION-->
+                                    <button class="btn"
+                                            onclick="window.location.href='{% url 'editar_descripcion' imagen.id %}'"
+                                    ><i data-toggle="tooltip" data-placement="top" title="Editar descripcion"
+                                        class="fa fa-edit"> </i>
+                                    </button>
+                                    <button class="btn" data-toggle="modal"
+                                            data-target="#eliminarModalCenter{{ imagen.id }}"
+                                    ><i data-toggle="tooltip" data-placement="top" title="Eliminar"
+                                        class="fa fa-trash"> </i>
+                                    </button>
+                                    <!----->
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                </div>
+            {% endfor %}
+        </div>
+        {% if imagenes.has_next or imagenes.has_previous %}
+            <ul class="pagination justify-content-center">
+                {% if imagenes.has_previous %}
+                    <li><a href="?page={{ imagenes.previous_page_number }}" class="page-link"> <i
+                            class="fa fa-chevron-left"> </i></a></li>
+                {% endif %}
+                {% for page in imagenes.paginator.page_range %}
+                    <li class="page-item {% if imagenes.number == page %}active{% endif %}">
+                        <a class="page-link" href="?page={{ page }}"> {{ page }} </a></li>
+                {% endfor %}
+                {% if imagenes.has_next %}
+                    <li>
+                        <a href="?page={{ imagenes.next_page_number }}" class="page-link">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ block.super }}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <script>
+
+        function fireSweetAlert(mensaje, submensaje) {
+            Swal.fire(
+                mensaje,
+                submensaje,
+                'success'
+            )
+        }
+
+        function compartir(text) {
+            var input = document.body.appendChild(document.createElement("input"));
+            input.value = text;
+            input.focus();
+            input.select();
+            document.execCommand('copy');
+            input.parentNode.removeChild(input);
+
+            //fireSweetAlert("Enlace Copiado", "¡Enlace copiado al portapapeles!")
+
+            // Compartir por Twitter
+            //window.location.href = "https://twitter.com/intent/tweet?text=Qué pasa mis seguidores! Mirad qué graffiti me he encontrado en Graffigram! \r\n" + text
+            window.open("https://twitter.com/intent/tweet?text=Qué pasa mis seguidores! Mirad qué graffiti me he encontrado en @Graffigram! \r\n" + text, "_blank")
+        }
+    </script>
+{% endblock %}
