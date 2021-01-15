@@ -35,7 +35,7 @@ def autenticar_usuario(request):
     idinfo = authenticate_user(id_token)
     comprobar_response(request, idinfo)
     if idinfo is not None:
-        request.session['token'] = idinfo
+        request.session['usuario'] = idinfo
         return redirect('/cargar-principal')
     else:
         return render(request, INICIAR_SESION_TEMPLATE)
@@ -43,7 +43,7 @@ def autenticar_usuario(request):
 
 def cargar_principal(request):
     try:
-        usuario = request.session.get('token', None)
+        usuario = request.session.get('usuario')
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
 
@@ -57,7 +57,7 @@ def cargar_principal(request):
 
 def enviar_respuesta(request):
     try:
-        usuario = request.session.get('token', None)
+        usuario = request.session.get('usuario')
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     destino = request.POST.get('destino')
@@ -71,7 +71,7 @@ def enviar_respuesta(request):
 
 def guardar_mensaje(request):
     try:
-        usuario = request.session.get('token', None)
+        usuario = request.session.get('usuario')
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     destino = request.POST.get('destino')
@@ -85,7 +85,7 @@ def guardar_mensaje(request):
 
 def crear_mensaje(request):
     try:
-        usuario = request.session.get('token', None)
+        usuario = request.session.get('usuario')
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     return render(request,CREAR_MENSAJE)
@@ -93,7 +93,7 @@ def crear_mensaje(request):
 
 def responder(request, origen ):
     try:
-        usuario = request.session.get('token', None)
+      usuario = request.session.get('usuario')
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     return render(request,RESPONDER, {'origen': origen})
