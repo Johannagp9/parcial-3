@@ -6,6 +6,7 @@
     {{ block.super }}
 {% endblock %}
 {% block body %}
+    <h1>Aplicación de mensajería</h1>
     <div class="contenedor" align="center">
         <form id="myForm" action="{% url 'autenticar' %}"
               method="post" enctype="multipart/form-data"> {% csrf_token %}

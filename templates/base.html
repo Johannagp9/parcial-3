@@ -66,19 +66,9 @@
         function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then( function () {
-
-                console.log('User signed out.');
-                $.ajax({
-                    type: "POST",
-                    url: '{% url 'cerrar_sesion' %}',
-                    success: function(result) {
-                        window.location.href="http://localhost:8000";
-                    },
-                    error : function(req, status, error) {
-                        window.location.href="http://localhost:8000";
-                    }
-          });
-            } );
+                 console.log('User signed out.');
+                 window.location.href="{% url 'cerrar_sesion' %}";
+            });
         }
 
         function onLoad() {

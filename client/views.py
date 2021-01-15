@@ -93,7 +93,7 @@ def crear_mensaje(request):
     return render(request,CREAR_MENSAJE)
 
 
-def responder(request, origen ):
+def responder(request, origen):
     try:
       usuario = request.session.get('usuario')
     except:
