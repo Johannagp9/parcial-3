@@ -134,7 +134,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 
 # Static files (CSS, JavaScript, Images)
