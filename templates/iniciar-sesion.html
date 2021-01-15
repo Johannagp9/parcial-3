@@ -7,6 +7,13 @@
 {% endblock %}
 {% block body %}
     <br>
+     {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <h1 style="color:cornflowerblue" class="text-center">Aplicación de mensajería</h1>
     <div class="contenedor" align="center">
         <form id="myForm" action="{% url 'autenticar' %}"

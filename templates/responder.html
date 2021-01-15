@@ -3,18 +3,10 @@
     Responder
 {% endblock %}
 {% block content %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success
-        {% elif  message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}secondary{% endif %}" role="alert">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
     <br>
     <div class="container">
     <h2 class="text-center" style="color: #447e9b">Respuesta</h2>
-    <form method="post" action="{% url 'enviar_respuesta' %}">{% csrf_token %}
+    <form method="post" action="{% url 'enviar_respuesta' %}" enctype="multipart/form-data">{% csrf_token %}
          <div class="form-group">
              <label for="contenido">Contenido:<sup style="color: #993333">*</sup></label>
              <textarea name="contenido" id="contenido" class="container" required></textarea>

@@ -149,8 +149,8 @@ GOOGLE_CLIENT_ID="701397416705-4npsqql9li0fcfud4d5dp43gj2kouii2.apps.googleuserc
 ##cloudinary
 
 CLOUD_NAME = 'dvxk9pojd'
-API_KEY = '977761672389298'
-API_SECRET = '4T3IAHYyIKER0kwc6b0rgsUlAOI'
+API_KEY = '444248536948287'
+API_SECRET = 'F9TRZMXQB3W3knbtzwE92HsU0CA'
 
 # Cloudinary config -> Si no va, probar sin variables de entorno.
 cloudinary.config(

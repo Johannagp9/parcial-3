@@ -1,4 +1,3 @@
-
 import json
 
 import cloudinary.uploader
@@ -7,7 +6,8 @@ from django.http import HttpResponse
 
 from client.Constantes import APP_NAME
 
-headers= {'content_type': 'application/json'}
+headers = {'content_type': 'application/json'}
+
 
 def generate_get(url, token, params):
     try:
@@ -38,6 +38,7 @@ def generate_post(url, datos, token):
     response = requests.post(url, json=datos, headers=headers)
     return response
 
+
 def generate_delete(url, token):
     try:
         headers['Authorization'] = token;
@@ -46,29 +47,36 @@ def generate_delete(url, token):
     response = requests.delete(url)
     return response
 
+
 def generate_put(url, datos, token):
     try:
         headers['Authorization'] = token
     except KeyError:
         return HttpResponse('Unauthorized', status=401)
-    response = requests.put(url,json=datos, headers=headers)
+    response = requests.put(url, json=datos, headers=headers)
     return response
+
 
 def authenticate_user(id_token):
     # Llamo a la API.
     url = APP_NAME + "api/auth/"
     params = {'token': id_token}
     header = {'content_type': 'application/x-www-form-urlencoded'}
-    response = requests.post(url,params, headers=header)
+    response = requests.post(url, params, headers=header)
     if response:
         return response_2_dict(response.json())
     return None
 
+
 def get_cloudinary_url(request):
     if len(request.FILES) > 0:
         file = request.FILES['foto']
-        result = cloudinary.uploader.upload(file, transformation=[
-            {'width': 500, 'crop': 'scale', }])
-        foto_url = result["url"]
-        return foto_url
+        print(file)
+        try:
+            result = cloudinary.uploader.upload(file, transformation=[
+                {'width': 500, 'crop': 'scale', }])
+            foto_url = result["url"]
+            return foto_url
+        except:
+            print("No se ha podido subir la imagen")
     return None

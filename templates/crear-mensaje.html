@@ -6,7 +6,7 @@
     <br>
     <div class="container">
      <h2 class="text-center" style="color: #447e9b">Crear mensaje</h2>
-    <form method="post" action="{% url 'guardar_mensaje' %}">{% csrf_token %}
+    <form method="post" action="{% url 'guardar_mensaje' %}" enctype="multipart/form-data">{% csrf_token %}
         <div class="form-group">
             <label for="destino">Destinatario:<sup style="color: #993333">*</sup></label>
             <input type="email" id="destino" name="destino" required class="form-control">

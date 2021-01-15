@@ -3,11 +3,11 @@
     Mensajes recibidos
 {% endblock %}
 {% block content %}
-    <div class="modal fade" id="modal_password">
+    <div class="modal fade" id="modal_image">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Contraseña</h2>
+                    <h2>Imagen</h2>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
                 </div>
@@ -18,6 +18,14 @@
         </div>
     </div>
     <br>
+     {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success
+        {% elif  message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}secondary{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <h2 class="text-center" style="color: #447e9b">Mensajes recibidos</h2>
     <div class="container">
     <table class="table table-hover">
@@ -39,7 +47,7 @@
                 <td>{{ mensaje.contenido }}</td>
                 <td>{{ mensaje.fecha }}</td>
                 <td> <a href="{% url 'responder' mensaje.origen %}" class="btn btn-light">Responder</a></td>
-                <td> {% if mensaje.foto %} <button onclick="cargarImagen({{ mensaje.foto }})" class="btn btn-dark">Imagen</button> {% else %} Sin imagen adjunta {% endif %}</td>
+                <td> {% if mensaje.foto %} <button type="button" onclick="cargarImagen('{{ mensaje.foto }}');" class="btn btn-dark" data-toggle="modal" data-target="#modal_password">Imagen</button> {% else %} Sin imagen adjunta {% endif %}</td>
             </tr>
         {% empty %}
             <div class="alert alert-info">No hay mensajes para ti</div>

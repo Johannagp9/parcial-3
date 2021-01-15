@@ -39,7 +39,6 @@ def autenticar_usuario(request):
     if idinfo is not None:
         request.session['usuario'] = idinfo
         user = request.session['usuario']
-        print(user)
         return redirect('/cargar-principal')
     else:
         return render(request, INICIAR_SESION_TEMPLATE)
