@@ -31,6 +31,11 @@ def comprobar_response(request, response):
             return render(request, INICIAR_SESION_TEMPLATE)
 
 
+def comprobar_session(usuario, request):
+    if usuario is None:
+        return render(request, INICIAR_SESION_TEMPLATE)
+
+
 @csrf_exempt
 def autenticar_usuario(request):
     id_token = request.POST.get('token')
@@ -47,6 +52,7 @@ def autenticar_usuario(request):
 def cargar_principal(request):
     try:
         usuario = request.session.get('usuario')
+        comprobar_session(usuario, request)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
 
@@ -61,6 +67,7 @@ def cargar_principal(request):
 def enviar_respuesta(request):
     try:
         usuario = request.session.get('usuario')
+        comprobar_session(usuario, request)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     destino = request.POST.get('destino')
@@ -80,6 +87,7 @@ def enviar_respuesta(request):
 def guardar_mensaje(request):
     try:
         usuario = request.session.get('usuario')
+        comprobar_session(usuario, request)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     destino = request.POST.get('destino')
@@ -99,6 +107,7 @@ def guardar_mensaje(request):
 def crear_mensaje(request):
     try:
         usuario = request.session.get('usuario')
+        comprobar_session(usuario, request)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     return render(request, CREAR_MENSAJE)
@@ -107,6 +116,10 @@ def crear_mensaje(request):
 def responder(request, origen):
     try:
         usuario = request.session.get('usuario')
+        comprobar_session(usuario, request)
     except:
         return render(request, INICIAR_SESION_TEMPLATE)
     return render(request, RESPONDER, {'origen': origen})
+
+
+

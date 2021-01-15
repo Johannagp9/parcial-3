@@ -5,20 +5,26 @@
 {% block content %}
     <br>
     <div class="container">
-     <h2 class="text-center" style="color: #447e9b">Crear mensaje</h2>
-    <form method="post" action="{% url 'guardar_mensaje' %}" enctype="multipart/form-data">{% csrf_token %}
-        <div class="form-group">
-            <label for="destino">Destinatario:<sup style="color: #993333">*</sup></label>
-            <input type="email" id="destino" name="destino" required class="form-control">
-        </div>
-        <div class="form-group">
-             <label for="contenido">Contenido:<sup style="color: #993333">*</sup></label>
-            <textarea id="contenido" name="contenido" required class="form-control"></textarea>
-        </div>
-        <img id="img" src="" style="max-height: 1000px; max-width: 950px"/>
-        <input type="file" id="mensaje_img" name="foto" accept="image/png, image/jpeg">
-        <button class="btn btn-success btn-block" type="submit">Enviar</button>
-    </form>
+        <h2 class="text-center" style="color: #447e9b">Crear mensaje</h2>
+        <form method="post" action="{% url 'guardar_mensaje' %}" enctype="multipart/form-data">{% csrf_token %}
+            <div class="form-group">
+                <label for="destino">Destinatario:<sup style="color: #993333">*</sup></label>
+                <input type="email" id="destino" name="destino" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="contenido">Contenido:<sup style="color: #993333">*</sup></label>
+                <textarea id="contenido" name="contenido" required class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+            <label for="img">Imagen:</label>
+                <input type="file" id="mensaje_img" name="foto"  class="form-control" accept="image/png, image/jpeg">
+            </div>
+            <p><img id="mmensaje_img" src="" style="max-height: 1000px; max-width: 950px"/></p>
+            <h6>A continuación puede elegir la siguiente información automática que se añadirá autommáticamente como contenido</h6>
+            <p><button type="button" class="btn btn-dark"  onclick="get_quote_of_the_day()">Frase del día</button></p>
+            <p><button type="button" class="btn btn-dark" onclick="get_climate_of_the_day()">Clima</button></p>
+            <button class="btn btn-success btn-block" type="submit">Enviar</button>
+        </form>
     </div>
 {% endblock %}
 {% block javascripts %}
@@ -40,4 +46,32 @@
             });
         });
     </script>
+     <script>
+     function get_quote_of_the_day() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    response=JSON.parse(this.responseText);
+                    console.log(response['contents']['quotes'][0]['quote'])
+                     $("#contenido").text(response['contents']['quotes'][0]['quote']);
+                }
+            };
+            xhttp.open("GET", "https://quotes.rest/qod", true);
+            xhttp.setRequestHeader("X-Theysaidso-Api-Secret", "They Said So");
+            xhttp.send();
+        }
+
+         function get_climate_of_the_day() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    response=JSON.parse(this.responseText);
+                    console.log(response['weather'][0]['main'])
+                     $("#contenido").text(response['weather'][0]['main']);
+                }
+            };
+            xhttp.open("GET", "http://api.openweathermap.org/data/2.5/weather?q=London&appid=b6fbd171141e65297b8f5d35c3d71326", true);
+            xhttp.send();
+        }
+        </script>
 {% endblock %}

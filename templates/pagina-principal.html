@@ -18,6 +18,7 @@
         </div>
     </div>
     <br>
+    <div class="container">
      {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success
@@ -27,7 +28,6 @@
         {% endfor %}
     {% endif %}
     <h2 class="text-center" style="color: #447e9b">Mensajes recibidos</h2>
-    <div class="container">
     <table class="table table-hover">
         <thead class="text-center">
         <tr>
