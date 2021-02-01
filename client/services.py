@@ -61,7 +61,7 @@ def generate_put(url, datos, token):
 
 def authenticate_user(id_token):
     # Llamo a la API.
-    url = APP_NAME + "api/auth/"
+    url = APP_NAME + "/api/auth/"
     params = {'token': id_token}
     header = {'content_type': 'application/x-www-form-urlencoded'}
     response = requests.post(url, params, headers=header)

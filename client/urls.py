@@ -14,5 +14,5 @@ urlpatterns = [
     path('ajax-imagen/',views.ajax_filter_imagenes,name='ajax_filtrar_imagen'),
     path('subir-imagen/',views.subir_imagen,name='subir_imagen'),
     path('actualizar-imagen/<str:id>',views.update_description,name='editar_descripcion'),
-    path('dar-like/<str:id>',views.dar_like,name='nuevo_like')
+    path('dar-like/<str:id>',views.dar_like,name='nuevo_like'),
 ]

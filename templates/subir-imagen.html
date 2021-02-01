@@ -12,11 +12,9 @@
              <textarea name="descripcion" id="descripcion" value="{% if imagen is not None %}{{ imagen.descripcion }}{% endif %}" class="form-control" required ></textarea>
              <small>Recuerde que puede incluir #hashtag</small>
           </div>
-        <img id="img" src="{% if imagen is not None %}{{ imagen.foto }}{% endif %}" style="max-height: 1000px; max-width: 950px"/>
-        {% if imagen is  None %}
+        <img id="img" src="" style="max-height: 1000px; max-width: 950px"/>
         <input type="file" id="mensaje_img" name="foto" accept="image/png, image/jpeg">
-        {% endif %}
-        <button class="btn btn-success btn-block" type="submit">Subir imagen</button>
+        <button class="btn btn-success btn-block" type="submit">Responder</button>
     </form>
     </div>
 {% endblock %}
